@@ -8,7 +8,7 @@ const moment = require('moment')
 var listDeArquivos = []
 let subtraido = []
 let propriedadeDuracao = []
-leitura.readdirSync('/mnt/c/Users/Desenv-04/Documents/20180409').forEach(function (arquivo) {
+leitura.readdirSync('C:/Users/NAC 17/Documents/JS Learning/20180409').forEach(function (arquivo) {
   listDeArquivos.push(arquivo) // novo array com os nomes "limpos"
 })
 
@@ -27,17 +27,17 @@ for (let i = 0; i < listDeArquivos.length; i++) {
   if (i > 0) {
     // subtraido[i] = moment().subtract(arrayComMoment[i - 1]).format(arrayComMoment[i])
     subtraido[i] = Math.abs(dataHora[i] - dataHora[i - 1])
-    console.log('subtraido: ' + moment.duration(subtraido[i]).asSeconds())
+    console.log('subtraido: ' + moment.duration(subtraido[i]).asSeconds() + ' em segundos.')
   }
 
-  ffmpeg.ffprobe('./20180409/' + listDeArquivos[i], function (err, data) {
-    if (!err) {
-      propriedadeDuracao[i] = data.format.duration
-      console.log('duracao do arquivo:' + propriedadeDuracao[i])
-    } else {
-      console.log('erro', err)
-    }
-  })
+  // ffmpeg.ffprobe('./20180409/' + listDeArquivos[i], function (err, data) {
+  //   if (!err) {
+  //     propriedadeDuracao[i] = data.format.duration
+  //     console.log('duracao do arquivo:' + propriedadeDuracao[i])
+  //   } else {
+  //     console.log('erro', err)
+  //   }
+  // })
 }
 
 // para executar comandos do cmd direto a partir do nodejs:
