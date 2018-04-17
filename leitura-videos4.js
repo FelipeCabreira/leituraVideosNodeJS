@@ -17,19 +17,20 @@ let dataHora = []
 // let transformaString = []
 let stringLimpa = []
 for (let i = 0; i < listDeArquivos.length; i++) {
-  // stringLimpa[i] = lista[i].replace('.wmv', '') // retira extensao
-  stringLimpa[i] = listDeArquivos[i].slice(0, -4)
-  // transformaString[i] = '' + stringLimpa[i] // transforma em string
-  // stringLimpa[i] = transformaString[i].substr(0, transformaString[i].lastIndexOf('.'))
-  dataHora[i] = moment(stringLimpa[i], 'hhmmss')
-  console.log(dataHora[i])
-  console.log(stringLimpa[i])
-  if (i > 0) {
-    // subtraido[i] = moment().subtract(arrayComMoment[i - 1]).format(arrayComMoment[i])
-    subtraido[i] = Math.abs(dataHora[i] - dataHora[i - 1])
-    console.log('subtraido: ' + moment.duration(subtraido[i]).asSeconds() + ' em segundos.')
-  }
-
+  if (listDeArquivos[i].length <= 5) { // valida digitos
+    // stringLimpa[i] = lista[i].replace('.wmv', '') // retira extensao
+    stringLimpa[i] = listDeArquivos[i].slice(0, -4)
+    // transformaString[i] = '' + stringLimpa[i] // transforma em string
+    // stringLimpa[i] = transformaString[i].substr(0, transformaString[i].lastIndexOf('.'))
+    dataHora[i] = moment(stringLimpa[i], 'hhmmss')
+    console.log(dataHora[i])
+    console.log(stringLimpa[i])
+    if (i > 0) {
+      // subtraido[i] = moment().subtract(arrayComMoment[i - 1]).format(arrayComMoment[i])
+      subtraido[i] = Math.abs(dataHora[i] - dataHora[i - 1])
+      console.log('subtraido: ' + moment.duration(subtraido[i]).asSeconds() + ' em segundos.')
+    }
+    // ALTEREI ARQUIVO
   // ffmpeg.ffprobe('./20180409/' + listDeArquivos[i], function (err, data) {
   //   if (!err) {
   //     propriedadeDuracao[i] = data.format.duration
@@ -38,6 +39,8 @@ for (let i = 0; i < listDeArquivos.length; i++) {
   //     console.log('erro', err)
   //   }
   // })
+  }
+  // end if valida digitos
 }
 
 // para executar comandos do cmd direto a partir do nodejs:
