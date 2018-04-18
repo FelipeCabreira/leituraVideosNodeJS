@@ -4,12 +4,23 @@ const leitura = require('fs')
 const ffmpeg = require('fluent-ffmpeg')
 // var cmd = require('node-cmd')
 const moment = require('moment')
+const path = require('path')
 // var moment = require('moment')
 var listDeArquivos = []
 let subtraido = []
 let propriedadeDuracao = []
-leitura.readdirSync('/mnt/c/Users/Desenv-04/Documents/20180409').forEach(function (arquivo) {
-  listDeArquivos.push(arquivo) // novo array com os nomes "limpos"
+let pastasDias = []
+// let pastasDias2 = []
+leitura.readdirSync(__dirname).forEach(function (arquivo) {
+  pastasDias.push(arquivo)
+})
+
+leitura.statSync(__dirname, function (arquivoStat) {
+  console.dir(arquivoStat)
+})
+
+leitura.readdirSync(path.join(__dirname, '/20180409')).forEach(function (arquivo) {
+  listDeArquivos.push(arquivo)
 })
 
 let dataHora = []
@@ -27,10 +38,9 @@ for (let i = 0; i < listDeArquivos.length; i++) {
   if (i > 0) {
     // subtraido[i] = moment().subtract(arrayComMoment[i - 1]).format(arrayComMoment[i])
     subtraido[i] = Math.abs(dataHora[i] - dataHora[i - 1])
-    console.log('subtraido: ' + moment.duration(subtraido[i]).asSeconds())
+    // console.log('subtraido: ' + moment.duration(subtraido[i]).asSeconds())
   }
-
-  ffmpeg.ffprobe('./20180409/' + listDeArquivos[i], function (err, data) {
+  ffmpeg.ffprobe(path.join(__dirname, '/20180409/') + listDeArquivos[i], function (err, data) {
     if (!err) {
       propriedadeDuracao[i] = data.format.duration
       // console.log('duracao do arquivo:' + propriedadeDuracao[i])
