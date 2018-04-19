@@ -7,76 +7,51 @@ const moment = require('moment')
 const path = require('path')
 // var moment = require('moment')
 var listDeArquivos = []
-var subtraido = []
-var propriedadeDuracao = []
-var dataHora = []
-let stringLimpa = []
-// let pastasDias = []
+let subtraido = []
+let propriedadeDuracao = []
+let pastasDias = []
 // let pastasDias2 = []
-// leitura.readdirSync(__dirname).forEach(function (arquivo) {
-//   pastasDias.push(arquivo)
-// })
-//
-// leitura.statSync(__dirname, function (arquivoStat) {
-//   console.dir(arquivoStat)
-// })
-let caminho = __dirname
+leitura.readdirSync(__dirname).forEach(function (arquivo) {
+  pastasDias.push(arquivo)
+})
 
-function getDirectories (caminho) {
-  return leitura.readdirSync(caminho).filter(function (file) {
-    return leitura.statSync(caminho + '/' + file).isDirectory()
-  })
-}
-console.log(caminho)
+leitura.statSync(__dirname, function (arquivoStat) {
+  console.dir(arquivoStat)
+})
 
 leitura.readdirSync(path.join(__dirname, '/20180409')).forEach(function (arquivo) {
   listDeArquivos.push(arquivo)
 })
+
+let dataHora = []
 // var extensaoArquivo = []
 // let transformaString = []
-
-let dir = path.join(__dirname, '/20180409/')
-for (let i = 1; i < listDeArquivos.length; i++) {
-  let arquivoAtual = listDeArquivos[i]
-  let arquivoAnterior = listDeArquivos[i - 1]
-  let horaAtual = moment(arquivoAtual.slice(0, -4), 'hhmmss')
-  let horaAnterior = moment(arquivoAnterior.slice(0, -4), 'hhmmss')
-  ffmpeg.ffprobe(dir + arquivoAnterior, (err, data) => {
-    if (err) {
-      console.log(err)
-      return
-    }
-    let horaFinalAnterior = moment(horaAnterior).add(data.format.duration, 'seconds')
-    let diferenca = moment.duration(horaAtual - horaFinalAnterior).asSeconds()
-    let mensagem = (diferenca >= -3 && diferenca <= 3) ? 'OK' : 'FURADO'
-    console.log(` - ${arquivoAnterior}\t${arquivoAtual}\t${data.format.duration}\t${diferenca}\t${mensagem}`)
-  })
-}
-
-/*
-
+let stringLimpa = []
 for (let i = 0; i < listDeArquivos.length; i++) {
-  stringLimpa[i] = listDeArquivos[i].slice(0, -4) // retira a extensao do arquivo
-  dataHora[i] = moment(stringLimpa[i], 'hhmmss') // transforma o nome dos arquivos em hora:minuto:segundo
+  // stringLimpa[i] = lista[i].replace('.wmv', '') // retira extensao
+  stringLimpa[i] = listDeArquivos[i].slice(0, -4)
+  // transformaString[i] = '' + stringLimpa[i] // transforma em string
+  // stringLimpa[i] = transformaString[i].substr(0, transformaString[i].lastIndexOf('.'))
+  dataHora[i] = moment(stringLimpa[i], 'hhmmss')
   // console.log(dataHora[i])
   // console.log(stringLimpa[i])
   if (i > 0) {
-    subtraido[i] = Math.abs(dataHora[i] - dataHora[i - 1]) // subtrai o nome de um arquivo(tempo) pelo anterior, para pegar a diferenca de tempo determinada
+    // subtraido[i] = moment().subtract(arrayComMoment[i - 1]).format(arrayComMoment[i])
+    subtraido[i] = Math.abs(dataHora[i] - dataHora[i - 1])
     // console.log('subtraido: ' + moment.duration(subtraido[i]).asSeconds())
   }
-  let command = ffmpeg(path.join(__dirname, '/20180409/') + listDeArquivos[i])
-  command.ffprobe((err, data) => {
-    // ffmpeg.ffprobe(path.join(__dirname, '/20180409/') + listDeArquivos[i], (err, data) => {
+  ffmpeg.ffprobe(path.join(__dirname, '/20180409/') + listDeArquivos[i], function (err, data) {
     if (!err) {
-      propriedadeDuracao[i] = data.format.duration // pega a duracao do video nas propriedades (details) do arquivo
+      propriedadeDuracao[i] = data.format.duration
       // console.log('duracao do arquivo:' + propriedadeDuracao[i])
     } else {
       console.log('erro', err)
     }
+
     if (i < (propriedadeDuracao.length - 1)) {
-      console.log('subtract ' + listDeArquivos[i] + ': ' + (moment.duration(subtraido[i + 1]).asSeconds() - propriedadeDuracao[i].toFixed(0))) // subtrai
+      console.log('subtract ' + listDeArquivos[i] + ': ' + (moment.duration(subtraido[i + 1]).asSeconds() - propriedadeDuracao[i].toFixed(0)))
       if ((moment.duration(subtraido[i + 1]).asSeconds() - propriedadeDuracao[i]) > 3 || (moment.duration(subtraido[i + 1]).asSeconds() - propriedadeDuracao[i]) < -3) {
-        console.log('Arquivo furado: ' + stringLimpa[i])
+        console.log('Arquivo furado: ' + listDeArquivos[i])
       }
     }
   })
@@ -90,4 +65,3 @@ for (let i = 0; i < listDeArquivos.length; i++) {
 //     console.log('error', err)
 //   }
 // })
-*/
